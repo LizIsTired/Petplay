@@ -16,7 +16,7 @@ import net.minecraft.util.Pair;
 import java.util.function.Function;
 
 public class ModBlocks {
-    public static final Block CRATE = registerBlockWithItem(Identifier.of(Petplay.MOD_ID,"crate"), Block::new, AbstractBlock.Settings.create().nonOpaque()).getLeft();
+    public static final Crate CRATE = registerBlockWithItem(Identifier.of(Petplay.MOD_ID,"crate"), Crate::new, AbstractBlock.Settings.create().nonOpaque()).getLeft();
 
     public static <T extends Block> T registerBlock(Identifier identifier, Function<AbstractBlock.Settings, T> factory, AbstractBlock.Settings settings) {
         return Registry.register(
