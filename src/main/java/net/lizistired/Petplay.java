@@ -2,11 +2,14 @@ package net.lizistired;
 
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.api.block.v1.FabricBlock;
+import net.minecraft.block.Block;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Petplay implements ModInitializer {
 	public static final String MOD_ID = "petplay";
+
 
 	// This logger is used to write text to the console and the log file.
 	// It is considered best practice to use your mod id as the logger's name.
@@ -20,5 +23,7 @@ public class Petplay implements ModInitializer {
 		// Proceed with mild caution.
 
 		LOGGER.info("Hello Fabric world!");
+		ModItems.initialize();
+		ModBlocks.initialize();
 	}
 }
