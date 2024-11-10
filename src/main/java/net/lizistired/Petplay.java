@@ -25,5 +25,6 @@ public class Petplay implements ModInitializer {
 		LOGGER.info("Hello Fabric world!");
 		ModItems.initialize();
 		ModBlocks.initialize();
+		ModBlockEntities.initialize();
 	}
 }
