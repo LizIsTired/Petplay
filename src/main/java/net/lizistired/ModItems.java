@@ -2,8 +2,6 @@ package net.lizistired;
 
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -18,7 +16,7 @@ import java.util.function.Function;
 
 public class ModItems {
 
-    public static final Item COLLAR = registerItem(Identifier.of(Petplay.MOD_ID,"collar"), Item::new, new Item.Settings());
+    public static final Item COLLAR = registerItem(Identifier.of(Petplay.MOD_ID,"collar"), Collar::new, new Item.Settings());
 
     public static final RegistryKey<ItemGroup> PETPLAY_ITEM_GROUP_KEY = RegistryKey.of(Registries.ITEM_GROUP.getKey(), Identifier.of(Petplay.MOD_ID, "item_group"));
 
@@ -42,9 +40,7 @@ public class ModItems {
         Registry.register(Registries.ITEM_GROUP, PETPLAY_ITEM_GROUP_KEY, PETPLAY_ITEM_GROUP);
 
 // Register items to the custom item group.
-        ItemGroupEvents.modifyEntriesEvent(PETPLAY_ITEM_GROUP_KEY).register(itemGroup -> {
-            itemGroup.add(ModItems.COLLAR);
-        });
+        ItemGroupEvents.modifyEntriesEvent(PETPLAY_ITEM_GROUP_KEY).register(itemGroup -> itemGroup.add(ModItems.COLLAR));
     }
 }
 

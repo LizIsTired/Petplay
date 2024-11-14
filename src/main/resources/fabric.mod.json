@@ -26,7 +26,10 @@
 		]
 	},
 	"mixins": [
-		"petplay.mixins.json",
+		{
+			"config": "petplay.mixins.json",
+			"environment": "server"
+		},
 		{
 			"config": "petplay.client.mixins.json",
 			"environment": "client"
@@ -40,5 +43,10 @@
 	},
 	"suggests": {
 		"another-mod": "*"
+	},
+	"custom": {
+		"loom:injected_interfaces": {
+			"net/minecraft/class_3222": ["net/lizistired/LeashImpl"]
+		}
 	}
 }

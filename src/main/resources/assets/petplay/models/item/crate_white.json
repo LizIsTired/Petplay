@@ -1,5 +1,5 @@
 {
-  "parent": "petplay:block/crate",
+  "parent": "petplay:block/crate_white",
   "display": {
     "firstperson_righthand": {
       "rotation": [ 0, -90, 25 ],

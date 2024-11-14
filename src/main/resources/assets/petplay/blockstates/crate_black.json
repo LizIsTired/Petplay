@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "activated=false": {
+      "model": "petplay:block/crate_open_black"
+    },
+    "activated=true": {
+      "model": "petplay:block/crate_black"
+    }
+  }
+}

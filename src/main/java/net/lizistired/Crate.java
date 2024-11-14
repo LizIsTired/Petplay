@@ -1,48 +1,58 @@
 package net.lizistired;
 
 import com.mojang.serialization.MapCodec;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
-import net.minecraft.block.entity.BlockEntity;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.block.*;
 import net.minecraft.entity.*;
-import net.minecraft.entity.mob.PiglinBrain;
-import net.minecraft.entity.mob.ZoglinEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.stat.Stats;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.TeleportTarget;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
-public class Crate extends Block {
+import java.util.Objects;
+
+public class Crate extends Block implements Stainable{
     public static final BooleanProperty ACTIVATED = BooleanProperty.of("activated");
     private static Entity crateBlockEntity;
+    private static final VoxelShape RAYCAST_SHAPE = createCuboidShape(0.0, 0.0, 0.0, 32.0, 80.0, 32.0);
+    protected static final VoxelShape OUTLINE_SHAPE_CLOSED = voxelShapeCrate.makeShapeClosed();
+    protected static final VoxelShape OUTLINE_SHAPE_OPEN = voxelShapeCrate.makeShapeOpen();
+    public static final MapCodec<Crate> CODEC = RecordCodecBuilder.mapCodec(
+            instance -> instance.group(DyeColor.CODEC.fieldOf("color").forGetter(Crate::getColor), createSettingsCodec())
+                    .apply(instance, Crate::new)
+    );
+    private final DyeColor color;
 
-    public Crate(Settings settings) {
+    public Crate(DyeColor color, Settings settings) {
         super(settings);
-        setDefaultState(getDefaultState().with(ACTIVATED, false));
+        setDefaultState(getDefaultState()
+                .with(ACTIVATED, false)
+                .with(Properties.FACING, Direction.NORTH));
+        this.color = color;
     }
 
     @Override
-    protected MapCodec<? extends Crate> getCodec() {
-        return createCodec(Crate::new);
+    public MapCodec<Crate> getCodec() {
+        return CODEC;
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(ACTIVATED);
+        builder.add(Properties.FACING);
     }
 
     @Override
@@ -75,7 +85,35 @@ public class Crate extends Block {
     @Override
     public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         super.onBreak(world, pos, state, player);
-        crateBlockEntity.discard();
+        try {
+            crateBlockEntity.discard();
+        } catch (NullPointerException e) {
+            throw new NullPointerException();
+        }
         return state;
+    }
+
+    @Override
+    protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        if(state.get(ACTIVATED)) {
+            return OUTLINE_SHAPE_CLOSED;
+        }
+        return OUTLINE_SHAPE_OPEN;
+    }
+
+    @Override
+    protected VoxelShape getRaycastShape(BlockState state, BlockView world, BlockPos pos) {
+        return RAYCAST_SHAPE;
+    }
+
+
+    @Override
+    public DyeColor getColor() {
+        return color;
+    }
+
+    @Override
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        return Objects.requireNonNull(super.getPlacementState(ctx)).with(Properties.FACING, ctx.getHorizontalPlayerFacing().getOpposite());
     }
 }

@@ -2,5 +2,11 @@
   "item.petplay.collar": "Collar",
   "block.petplay.crate": "Crate",
   "item.petplay.crate": "Crate",
+  "block.petplay.crate_black": "Black Crate",
+  "item.petplay.crate_black": "Black Crate",
+  "block.petplay.crate_white": "White Crate",
+  "item.petplay.crate_white": "White Crate",
+  "block.petplay.crate_pink": "Pink Crate",
+  "item.petplay.crate_pink": "Pink Crate",
   "itemGroup.petPlay": "Petplay"
 }
